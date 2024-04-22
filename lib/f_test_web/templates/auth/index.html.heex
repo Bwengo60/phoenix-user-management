@@ -1,0 +1,13 @@
+<div>
+<.form for={:ok} let={f} method="post" action="/user/login">
+<%= label f, :email %>
+<%= email_input f, :email, required: true %>
+<%= error_tag f, :email %>
+
+<%= label f, :password %>
+<%= password_input f, :password, required: true %>
+<%= error_tag f, :password %>
+
+<%= submit "Login" %>
+</.form>
+</div>

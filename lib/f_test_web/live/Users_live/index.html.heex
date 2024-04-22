@@ -1,0 +1,92 @@
+
+
+<div>
+<%= link "Create User", to: "/new" %>
+
+<%= if @live_action in [:new, :edit] do %>
+    <.modal return_to={Routes.users_index_path(@socket, :index)}>
+        <.live_component
+          id={@user.id || :new}
+          user={@user}
+          module={FTestWeb.UsersLive.Form}
+          title="page"
+          action={@live_action}
+        />
+    </.modal>
+<% end %>
+
+<%= if @show do %>
+   <.modal>
+      <.show user={@user}/>
+   </.modal>
+<% end %>
+
+<div class="flex flex-col">
+    <div class="overflow-x-auto sm:mx-0.5 lg:mx-0.5">
+      <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+        <div class="overflow-hidden">
+          <table class="min-w-full">
+            <thead class="bg-gray-200 border-b">
+              <tr>
+                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                  #
+                </th>
+                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                  First
+                </th>
+                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                  Last
+                </th>
+                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                  Handle
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+                <%= for user <- @users do%>
+              <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= user.id %></td>
+                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <%= user.username %>
+                </td>
+                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <%= user.email %>
+                  
+                </td>
+                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+
+                <%= if @current_user.is_admin do %>
+                <%= link "Edit", to: "/#{user.id}/edit", phx_value_id: user.id %>
+
+                <% else %>
+                <span class="disabled-link">Edit</span>
+                <% end %>
+
+
+                <%= if @current_user.is_admin do %>
+                <%= link "Show", to: "#", phx_value_id: user.id, phx_click: "show-user"%>
+
+                <% else %>
+                <span class="disabled-link">Show</span>
+                <% end %>
+
+                <%= if @current_user.is_admin do %>
+
+                <%= link "Delete", to: "#", phx_value_id: user.id, phx_click: "update-status", data: [confirm: "Are you sure"]%>
+
+                <% else %>
+                <span class="disabled-link">Show</span>
+                <% end %>
+                  
+                </td>
+              </tr>
+              <% end %>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

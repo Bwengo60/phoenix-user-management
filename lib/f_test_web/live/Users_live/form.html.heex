@@ -1,0 +1,28 @@
+<div>
+  <.form for={@changeset} let={f} phx-submit="save-user">
+
+    <div class="form-group">
+      <label>User name:</label>
+      <%= text_input f, :username, class: "form-control", placeholder: "ENTER USERNAME" %>
+
+      <label>Email:</label>
+
+      <%= text_input f, :email, placeholder: "ENTER EMAIL" %>
+      <span><%= @error_msg %> </span>
+      <label>Phone number:</label>
+
+      <%= text_input f, :phone, placeholder: "ENTER PHONE" %>
+      <%= if @edit_user do%>
+      <% else %>
+        <label>Password:</label>
+
+        <%= password_input f, :password, required: true %>
+      <% end %>
+
+      <input type="submit">
+
+     </div>
+
+    </.form>
+
+</div>
