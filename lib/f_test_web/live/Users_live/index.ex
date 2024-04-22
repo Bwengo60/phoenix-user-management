@@ -1,4 +1,6 @@
 defmodule FTestWeb.UsersLive.Index do
+  alias FTestWeb.Components.Search
+  alias FTest.AdditionalFunctionality
   alias FTest.Users
   alias FTest.Users.User
   use FTestWeb, :live_view
@@ -9,7 +11,7 @@ defmodule FTestWeb.UsersLive.Index do
   def mount(_params, session, socket) do
     users = FTest.Users.list_users()
     socket = assign_defaults(session, socket)
-    socket = assign(socket, users: users, show: false)
+    socket = assign(socket, users: users, show: false, search: false, searched_users: nil)
     {:ok, socket}
   end
 
@@ -99,6 +101,25 @@ defmodule FTestWeb.UsersLive.Index do
       socket,
       user: user,
       show: true
+    )
+    {:noreply, socket}
+  end
+
+  def handle_event("search-user", params, socket) do
+    search = params["ok"]["search"]
+    socket = assign(
+      socket, search: true,
+     searched_users: AdditionalFunctionality.get_users_by_name(search)
+
+    )
+    {:noreply, socket}
+  end
+
+  def handle_event("suggest-search", params, socket) do
+    search = params["ok"]["search"]
+    socket = assign(
+      socket,
+      users: AdditionalFunctionality.user_suggestion(search)
     )
     {:noreply, socket}
   end

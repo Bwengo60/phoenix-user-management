@@ -2,6 +2,15 @@
 
 <div>
 <%= link "Create User", to: "/new" %>
+<.form let={f} for={:ok} phx_submit="search-user">
+   <%= text_input f, :search %>
+   <input type="submit" value="search">
+</.form>
+
+<.form let={f} for={:ok} phx_change="suggest-search">
+   <%= text_input f, :search, placeholder: "Find User"%>
+   <input type="submit" value="search">
+</.form>
 
 <%= if @live_action in [:new, :edit] do %>
     <.modal return_to={Routes.users_index_path(@socket, :index)}>
@@ -19,6 +28,13 @@
    <.modal>
       <.show user={@user}/>
    </.modal>
+<% end %>
+
+<%= if @search do%>
+   <.modal>
+      <%= live_component Search,
+        searched_users: @searched_users %>
+    </.modal>
 <% end %>
 
 <div class="flex flex-col">
