@@ -11,7 +11,7 @@ defmodule FTestWeb.UsersLive.Index do
   def mount(_params, session, socket) do
     users = FTest.Users.list_users()
     socket = assign_defaults(session, socket)
-    socket = assign(socket, users: users, show: false, search: false, searched_users: nil)
+    socket = assign(socket, users: users, show: false, search: false, searched_users: nil, options: %{page: 1, per_page: 5})
     {:ok, socket}
   end
 
@@ -29,8 +29,19 @@ defmodule FTestWeb.UsersLive.Index do
 
   end
 
-  defp apply_action(socket, :index, _params) do
-    socket
+  defp apply_action(socket, :index, params) do
+    page = String.to_integer(params["page"] || "1")
+    per_page = String.to_integer(params["per_page"] || "5")
+
+    paginate_options = %{page: page, per_page: per_page}
+    users = Users.list_users(paginate: paginate_options)
+
+      assign(socket,
+        options: paginate_options,
+        per_page: per_page,
+        page: page,
+        users: users
+      )
 
   end
 
@@ -123,4 +134,6 @@ defmodule FTestWeb.UsersLive.Index do
     )
     {:noreply, socket}
   end
+
+
 end

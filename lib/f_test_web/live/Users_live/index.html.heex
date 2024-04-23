@@ -101,6 +101,21 @@
             </tbody>
           </table>
         </div>
+
+        <%= if @options.page > 1 do %>
+        <%= live_patch "Previous" , to: Routes.users_index_path(
+          @socket, 
+          :index,
+          page: @options.page - 1,
+          per_page: @options.per_page
+        ), class: "next" %>
+        <% end %>
+        <%= live_patch "Next" , to: Routes.users_index_path(
+          @socket, 
+          :index,
+          page: @options.page + 1,
+          per_page: @options.per_page
+        ), class: "next" %>
       </div>
     </div>
   </div>

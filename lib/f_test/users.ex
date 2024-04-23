@@ -113,6 +113,8 @@ defmodule FTest.Users do
 
   end
 
+
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes.
 
@@ -129,4 +131,21 @@ defmodule FTest.Users do
   def change_user_reg(%User{} = user, attrs \\ %{}) do
     User.registration_changeset(user, attrs)
   end
+
+
+  def list_users(criteria) when is_list(criteria) do
+    query = from(d in User)
+
+    Enum.reduce(criteria, query, fn
+      {:paginate, %{page: page, per_page: per_page}}, query ->
+        from q in query,
+          offset: ^((page - 1) * per_page),
+          limit: ^per_page
+
+      {:sort, %{sort_by: sort_by, sort_order: sort_order}}, query ->
+        from q in query, order_by: [{^sort_order, ^sort_by}]
+    end)
+    |> Repo.all()
+  end
+
 end

@@ -10,13 +10,14 @@ alias FTest.Users.User
     end
   end
 
-  def user_suggestion(""), do: []
-def user_suggestion(prefix) do
+  def user_suggestion(""), do: FTest.Users.list_users()
+  def user_suggestion(prefix) do
   users = FTest.Users.list_users() || []  # Use empty list as default if list_users() returns nil
   Enum.filter(users, &has_prefix?(&1.username, prefix))
-end
+  end
 
 defp has_prefix?(username, prefix) do
   String.starts_with?(String.downcase(username), String.downcase(prefix))
 end
+
 end
