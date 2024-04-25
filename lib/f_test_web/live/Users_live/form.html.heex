@@ -1,7 +1,8 @@
 <div>
-  <.form for={@changeset} let={f} phx-submit="save-user">
+  <.form for={@changeset} let={f} phx-submit="save-user" phx-target={@myself} >
 
     <div class="form-group">
+     
       <label>User name:</label>
       <%= text_input f, :username, class: "form-control", placeholder: "ENTER USERNAME" %>
 
@@ -13,6 +14,7 @@
 
       <%= text_input f, :phone, placeholder: "ENTER PHONE" %>
       <%= if @edit_user do%>
+          
       <% else %>
         <label>Password:</label>
 

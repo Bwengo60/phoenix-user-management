@@ -4,6 +4,7 @@ defmodule FTest.Users do
   """
 
   import Ecto.Query, warn: false
+  alias Ecto.Multi
   alias FTest.Repo
 
   alias FTest.Users.User
@@ -59,9 +60,12 @@ defmodule FTest.Users do
 
     case user do
       nil->
-        %User{}
-        |> User.registration_changeset(attrs)
-        |> Repo.insert()
+        changeset = User.registration_changeset(%User{}, attrs)
+        Multi.new()
+        |>Multi.insert(user, changeset)
+        |>Repo.transaction()
+
+
       %User{} ->
         :user_exist
     end
@@ -87,9 +91,12 @@ defmodule FTest.Users do
 
   """
   def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
+
+    user_changeset = User.changeset(user, attrs["user"])
+    Multi.new()
+    |>Multi.update(user, user_changeset)
+    |>Repo.transaction()
+
   end
 
   @doc """
@@ -134,7 +141,7 @@ defmodule FTest.Users do
 
 
   def list_users(criteria) when is_list(criteria) do
-    query = from(d in User)
+    query = from(u in User, where: u.status ==  true)
 
     Enum.reduce(criteria, query, fn
       {:paginate, %{page: page, per_page: per_page}}, query ->
